@@ -1,3 +1,5 @@
+import 'swiper/css';
+import 'swiper/css/navigation';
 import '@styles/_global.scss';
 
 import { App } from '@components';
