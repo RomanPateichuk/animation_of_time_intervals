@@ -1,0 +1,39 @@
+@use '../../styles/_mixins.scss' as mixins;
+
+.titleWrapper{
+  display: flex;
+  align-items: center;
+}
+
+.title{
+  margin-left: 75px;
+  @include mixins.title;
+}
+
+.description{
+  font-family: 'PTSans', sans-serif;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 150%;
+  color: #42567a;
+}
+
+
+.numbersWrapper{
+  display: flex;
+  justify-content: center;
+  gap: 10rem;
+  .dateStart{
+    @include mixins.date(var(--color-start-number));
+  }
+
+  .dateEnd{
+    @include mixins.date(var(--color-end-number));
+  }
+}
+
+
+
+.subTitle{
+  @include mixins.sub_title;
+}

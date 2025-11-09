@@ -1,0 +1,31 @@
+{
+	"compilerOptions": {
+		"allowUmdGlobalAccess": true,
+		"target": "es5",
+		"lib": ["dom", "dom.iterable", "esnext"],
+		"allowJs": true,
+		"skipLibCheck": true,
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"strict": true,
+		"forceConsistentCasingInFileNames": true,
+		"noFallthroughCasesInSwitch": true,
+		"module": "esnext",
+		"moduleResolution": "node",
+		"resolveJsonModule": true,
+		"downlevelIteration": true,
+		"isolatedModules": false,
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"noEmit": false,
+		"jsx": "react-jsx",
+		"sourceMap": true,
+		"baseUrl": "./",
+		"paths": {
+			"@components": ["./src/components/index.ts"],
+			"@components/*": ["./src/components/*"],
+			"@/*": ["src/*"]
+		}
+	},
+	"include": ["src"]
+}
