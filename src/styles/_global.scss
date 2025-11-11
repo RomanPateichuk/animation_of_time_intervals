@@ -21,3 +21,29 @@ ol,
 ul {
   list-style: none;
 }
+
+
+// swiper slider
+
+.swiper-button-prev, .swiper-button-next{
+  border-radius: 50%;
+  background-color: #fff;
+  box-shadow: 0 0 15px 0 rgba(56, 119, 238, 0.1);
+  .swiper-navigation-icon{
+    stroke-width: 2;
+    stroke: #3877ee;
+    width: 5px;
+  }
+
+  &.swiper-button-disabled{
+    display: none;
+  }
+
+  &:hover{
+    &:hover{
+      transform: scale(1.1);
+      filter: drop-shadow(2px 2px 2px rgba(0, 0, 0, 0.3));
+      color: #1d4ed8;
+    }
+  }
+}

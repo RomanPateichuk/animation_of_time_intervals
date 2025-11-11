@@ -1,8 +1,12 @@
 import { HistoricalEvent } from '@components/App/types';
+import { useGSAP } from '@gsap/react';
 import classNames from 'classnames';
-import { useEffect, useState } from 'react';
+import gsap from 'gsap';
+import { useEffect, useRef, useState } from 'react';
 import { Navigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
+
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 
 import arrowLeft from '../../assets/icons/arrowLeft.svg';
 import arrowRight from '../../assets/icons/arrowRight.svg';
@@ -11,34 +15,110 @@ import { historicalEvents } from './mockData';
 import s from './styles.module.scss';
 
 export const App = () => {
-  const [element, setElement] = useState<HistoricalEvent | null>(null);
-  const [activeElement, setActiveElement] = useState(10);
+  const [elements, setElements] = useState<HistoricalEvent[] | null>(null);
+  const [activeElement, setActiveElement] = useState(6);
+  const [hoveredElement, setHoveredElement] = useState<number | null>(null);
 
+  const isLarge = useMediaQuery('(max-width: 1200px)');
+
+  const container = useRef<HTMLDivElement | null>(null);
+  const rotationIndex = useRef({ index: 6 });
   useEffect(() => {
-    setElement(historicalEvents[9]);
+    setElements(historicalEvents);
   }, []);
 
-  const radius = 266;
+  useGSAP(
+    () => {
+      updateCirclePositions(activeElement);
 
-  const clickItemHandler = (item: HistoricalEvent, index: number) => {
+      gsap.to(rotationIndex.current, {
+        index: activeElement,
+        duration: 0.5,
+        ease: 'power2.inOut',
+
+        onUpdate: () => {
+          updateCirclePositions(rotationIndex.current.index);
+        },
+      });
+    },
+    { scope: container, dependencies: [activeElement, elements, hoveredElement] },
+  );
+
+  const updateCirclePositions = (currentAnimatedIndex: number) => {
+    const R = 265;
+    const centerX = 268;
+    const centerY = 265;
+
+    const items = gsap.utils.toArray(
+      '[data-gsap-target="circle-item"]',
+      container.current,
+    );
+
+    items.forEach((item: any, i) => {
+      const angleStep = Math.PI / 3;
+      const offsetAngle = (5 - (currentAnimatedIndex - 1)) * angleStep;
+      const angle = i * angleStep + offsetAngle;
+      const isActive = i + 1 === activeElement;
+      const isHovered = i + 1 === hoveredElement;
+      const itemSize = isActive || isHovered ? 56 : 6;
+      const xPos = centerX + R * Math.cos(angle) - itemSize / 2;
+      const yPos = centerY + R * Math.sin(angle) - itemSize / 2;
+
+      gsap.set(item, {
+        x: xPos,
+        y: yPos,
+        position: 'absolute',
+      });
+    });
+  };
+
+  const generateCircleItems = () => {
+    return (
+      <>
+        {elements?.map((item, index) => {
+          return (
+            <div
+              key={item.id}
+              data-gsap-target="circle-item"
+              onMouseEnter={() => {
+                setHoveredElement(index + 1);
+              }}
+              onMouseLeave={() => {
+                setHoveredElement(null);
+              }}
+              onClick={() => {
+                clickItemHandler(index + 1);
+              }}
+              className={classNames({
+                [s.active]: index + 1 === activeElement || index + 1 === hoveredElement,
+                [s.item]: index + 1 !== activeElement && index + 1 !== hoveredElement,
+              })}>
+              {index + 1 === activeElement || index + 1 === hoveredElement
+                ? index + 1
+                : null}
+              {index + 1 === activeElement && (
+                <div className={s.circleTitle}>{item.title}</div>
+              )}
+            </div>
+          );
+        })}
+      </>
+    );
+  };
+
+  const clickItemHandler = (index: number) => {
     setActiveElement(index);
-    setElement(item);
   };
 
   const previousDateHandler = () => {
     setActiveElement((prev) => {
-      const newIndex = prev > 1 ? prev - 1 : 1;
-      setElement(historicalEvents[newIndex - 1]);
-      return newIndex;
+      return prev > 1 ? prev - 1 : 1;
     });
   };
 
   const nextDateHandler = () => {
     setActiveElement((prev) => {
-      const newIndex =
-        prev < historicalEvents.length ? prev + 1 : historicalEvents.length;
-      setElement(historicalEvents[newIndex - 1]);
-      return newIndex;
+      return prev < historicalEvents.length ? prev + 1 : historicalEvents.length;
     });
   };
 
@@ -55,36 +135,14 @@ export const App = () => {
         </div>
 
         <div className={s.numbersWrapper}>
-          <p className={s.dateStart}>{element?.start}</p>
-          <p className={s.dateEnd}>{element?.end}</p>
+          <p className={s.dateStart}>{elements?.[activeElement - 1]?.start}</p>
+          <p className={s.dateEnd}>{elements?.[activeElement - 1]?.end}</p>
         </div>
-        <div className={s.circleWrapper}>
-          {historicalEvents.map((item, index) => {
-            const angle = ((2 * Math.PI) / historicalEvents.length) * index;
-            const itemSize = index + 1 === activeElement ? 56 : 6;
-            const x = 268 + radius * Math.cos(angle) - itemSize / 2;
-            const y = 265 + radius * Math.sin(angle) - itemSize / 2;
 
-            return (
-              <div
-                onClick={() => {
-                  clickItemHandler(item, index + 1);
-                }}
-                key={item.id}
-                style={{
-                  position: 'absolute',
-                  left: `${x}px`,
-                  top: `${y}px`,
-                }}
-                className={classNames({
-                  [s.active]: index + 1 === activeElement,
-                  [s.item]: index + 1 !== activeElement,
-                })}>
-                {index + 1 === activeElement ? index + 1 : null}
-              </div>
-            );
-          })}
+        <div ref={container} className={s.circleWrapper}>
+          {generateCircleItems()}
         </div>
+
         <div className={s.circleButtons}>
           <p className={s.text}>{`${activeElement}/${historicalEvents.length}`}</p>
           <div className={s.group}>
@@ -102,14 +160,17 @@ export const App = () => {
             </button>
           </div>
         </div>
+
         <div className={s.slider}>
           <Swiper
             navigation={true}
             modules={[Navigation]}
-            spaceBetween={50}
-            slidesPerView={4}>
-            {element &&
-              element?.children?.map((item) => (
+            spaceBetween={isLarge ? 50 : 80}
+            slidesPerView={isLarge ? 3 : 4}
+            slidesOffsetBefore={isLarge ? 0 : 80}
+            slidesOffsetAfter={isLarge ? 0 : 80}>
+            {elements &&
+              elements?.[activeElement - 1]?.children?.map((item) => (
                 <SwiperSlide>
                   <div className={s.sliderItem} key={item.id}>
                     <p className={s.subTitle}>{item.year}</p>

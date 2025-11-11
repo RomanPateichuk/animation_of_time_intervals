@@ -10,4 +10,8 @@ export interface HistoricalEvent {
   end: number;
   title: string;
   children: EventItem[];
+  x?: number;
+  y?: number;
 }
+
+export type CoordinatesType = { x: number; y: number };
