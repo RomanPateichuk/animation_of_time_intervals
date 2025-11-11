@@ -177,8 +177,8 @@ export const App = () => {
             slidesOffsetAfter={isExtraLarge ? 0 : 80}>
             {elements &&
               elements?.[activeElement - 1]?.children?.map((item) => (
-                <SwiperSlide>
-                  <div className={s.sliderItem} key={item.id}>
+                <SwiperSlide key={item.id}>
+                  <div className={s.sliderItem}>
                     <p className={s.subTitle}>{item.year}</p>
                     <p className={s.description}>{item.description}</p>
                   </div>
