@@ -95,6 +95,7 @@
       }
 
       @media (max-width: 576px) {
+        z-index: 100;
         position: absolute;
         bottom: 2.5rem;
       }
