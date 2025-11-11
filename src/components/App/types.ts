@@ -13,5 +13,3 @@ export interface HistoricalEvent {
   x?: number;
   y?: number;
 }
-
-export type CoordinatesType = { x: number; y: number };

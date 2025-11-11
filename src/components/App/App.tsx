@@ -3,7 +3,7 @@ import { useGSAP } from '@gsap/react';
 import classNames from 'classnames';
 import gsap from 'gsap';
 import { useEffect, useRef, useState } from 'react';
-import { Navigation } from 'swiper/modules';
+import { Navigation, Pagination } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 import { useMediaQuery } from '@/hooks/useMediaQuery';
@@ -19,7 +19,8 @@ export const App = () => {
   const [activeElement, setActiveElement] = useState(6);
   const [hoveredElement, setHoveredElement] = useState<number | null>(null);
 
-  const isLarge = useMediaQuery('(max-width: 1200px)');
+  const isExtraLarge = useMediaQuery('(max-width: 1200px)');
+  const isMedium = useMediaQuery('(max-width: 768px)');
 
   const container = useRef<HTMLDivElement | null>(null);
   const rotationIndex = useRef({ index: 6 });
@@ -125,24 +126,25 @@ export const App = () => {
   return (
     <div className={s.wrapper}>
       <div className={s.content}>
-        <div className={s.titleWrapper}>
-          <div>
-            <img src={titleLine} alt="titleLine" />
+        <div className={s.bg}>
+          <div className={s.numbersWrapper}>
+            <p className={s.dateStart}>{elements?.[activeElement - 1]?.start}</p>
+            <p className={s.dateEnd}>{elements?.[activeElement - 1]?.end}</p>
           </div>
+          <div ref={container} className={s.circleWrapper}>
+            {generateCircleItems()}
+          </div>
+        </div>
+        <div className={s.titleWrapper}>
+          {!isMedium && (
+            <div>
+              <img src={titleLine} alt="title line" />
+            </div>
+          )}
           <p className={s.title}>
             Исторические <br /> даты
           </p>
         </div>
-
-        <div className={s.numbersWrapper}>
-          <p className={s.dateStart}>{elements?.[activeElement - 1]?.start}</p>
-          <p className={s.dateEnd}>{elements?.[activeElement - 1]?.end}</p>
-        </div>
-
-        <div ref={container} className={s.circleWrapper}>
-          {generateCircleItems()}
-        </div>
-
         <div className={s.circleButtons}>
           <p className={s.text}>{`${activeElement}/${historicalEvents.length}`}</p>
           <div className={s.group}>
@@ -160,15 +162,19 @@ export const App = () => {
             </button>
           </div>
         </div>
-
         <div className={s.slider}>
           <Swiper
-            navigation={true}
-            modules={[Navigation]}
-            spaceBetween={isLarge ? 50 : 80}
-            slidesPerView={isLarge ? 3 : 4}
-            slidesOffsetBefore={isLarge ? 0 : 80}
-            slidesOffsetAfter={isLarge ? 0 : 80}>
+            navigation={!isMedium}
+            modules={[Navigation, Pagination]}
+            pagination={
+              isMedium && {
+                clickable: true,
+              }
+            }
+            spaceBetween={isExtraLarge ? 50 : 80}
+            slidesPerView={isMedium ? 2 : isExtraLarge ? 3 : 4}
+            slidesOffsetBefore={isExtraLarge ? 0 : 80}
+            slidesOffsetAfter={isExtraLarge ? 0 : 80}>
             {elements &&
               elements?.[activeElement - 1]?.children?.map((item) => (
                 <SwiperSlide>

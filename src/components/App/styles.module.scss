@@ -2,125 +2,54 @@
 
 .wrapper {
   background: var(--color--background);
-  padding: 0 3.5rem;
 
   .content {
     display: flex;
     flex-direction: column;
-    border: 1px solid var(--color--line);
+    max-width: 1440px;
+    min-height: 100vh;
+    border-left: 1px solid var(--color--line);
+    border-right: 1px solid var(--color--line);
     margin: 0 auto;
     padding-top: 170px;
-    max-width: 1440px;
     position: relative;
-    min-height: 100vh;
 
     @media (max-width: 992px) {
       padding-top: 100px;
     }
 
+    @media (max-width: 768px) {
+      padding-top: 59px;
+    }
+
     .titleWrapper {
       display: flex;
       justify-content: flex-start;
-      flex: 1;
+      margin-bottom: 35%;
+
       .title {
         margin-left: 75px;
         @include mixins.title;
-      }
-    }
 
-    .numbersWrapper {
-      display: flex;
-      justify-content: center;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      gap: 125px;
-      @media(max-width: 1400px) {
-        gap: 50px;
-      }
-      .dateStart {
-        @include mixins.date(var(--color-start-number));
-        @media(max-width: 1400px) {
-          font-size: 100px;
+        @media (max-width: 768px) {
+          font-size: 32px;
+          margin-left: 20px;
         }
-      }
 
-      .dateEnd {
-        @include mixins.date(var(--color-end-number));
-        @media(max-width: 1400px) {
-          font-size: 100px;
+        @media (max-width: 320px) {
+          font-size: 20px;
         }
-      }
-    }
 
-    &:after,
-    &:before {
-      display: block;
-      content: '';
-      border: 1px solid var(--color--line);
-      top: 50%;
-      left: 50%;
-      position: absolute;
-      z-index: 100;
-    }
-
-    &:before {
-      transform: translate(-50%, -50%) rotate(90deg);
-      width: calc(100vh - 2px);
-    }
-
-    &:after {
-      transform: translate(-50%, -50%);
-      width: 100%;
-    }
-
-    .circleWrapper {
-      width: 536px;
-      height: 530px;
-      border-radius: 50%;
-      border: 1px solid var(--color--line);
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 250;
-
-      .item {
-        cursor: pointer;
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background-color: var(--color--text);
-        z-index: 100;
       }
 
-      .active {
-        cursor: pointer;
-        display: flex;
-        width: 56px;
-        height: 56px;
-        border-radius: 50%;
-        text-align: center;
-        align-items: center;
-        justify-content: center;
-        background-color: var(--color--background);
-        border: 1px solid var(--color--line);
-        z-index: 100;
-      }
-
-      .circleTitle {
-        position: absolute;
-        left: 130%;
-        @include mixins.font-PTSans-property(700, 20)
+      @media (max-width: 768px) {
+        margin-bottom: 5%;
       }
     }
 
     .circleButtons {
       margin-left: 75px;
-      position: absolute;
-      bottom: 30%;
-
+      flex: 1;
       .text {
         @include mixins.font-PTSans-property($font-size: 14);
         margin-bottom: 20px;
@@ -129,6 +58,10 @@
       .group {
         display: flex;
         gap: 20px;
+
+        @media (max-width: 768px) {
+         gap: 8px;
+        }
 
         .button {
           display: flex;
@@ -149,15 +82,36 @@
           &:disabled {
             border: 1px solid var(--color--button-disabled);
           }
+
+          @media (max-width: 768px) {
+            width: 25px;
+            height: 25px;
+          }
         }
       }
+
+      @media (max-width: 768px) {
+        margin-left: 20px;
+      }
+
+      @media (max-width: 576px) {
+        position: absolute;
+        bottom: 0;
+      }
+
     }
 
     .slider {
-      padding: 0 75px;
       width: 100%;
+      margin-top: auto;
+      padding: 56px 75px 104px 75px;
+
+      @media (max-width: 768px) {
+        padding: 0 20px;
+      }
 
       .sliderItem {
+        height: 135px;
         .subTitle {
           margin-bottom: 15px;
           @include mixins.sub_title;
@@ -166,11 +120,126 @@
         .description {
           @include mixins.description;
         }
+      }
+    }
 
-        @media(max-width: 768px) {
+    .bg {
+      .numbersWrapper {
+        display: flex;
+        justify-content: center;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        gap: 125px;
 
+        @media (max-width: 1200px) {
+          gap: 50px;
+        }
+
+        @media (max-width: 320px) {
+          gap: 30px;
+        }
+
+        .dateStart {
+          @include mixins.date(var(--color-start-number));
+        }
+
+        .dateEnd {
+          @include mixins.date(var(--color-end-number));
+        }
+
+        .dateEnd, .dateStart{
+          @media (max-width: 1200px) {
+            font-size: 15vw;
+          }
+          @media (max-width: 320px) {
+            font-size: 56px;
+          }
+        }
+
+        @media (max-width: 576px) {
+          top: 30%;
+          left: 50%;
+          transform: translate(-50%, 0%);
+          &:after{
+            content: '';
+            border: 1px solid var(--color--line);
+            position: absolute;
+            width: 100%;
+            bottom: -150px;
+            left: 0;
+          }
+        }
+      }
+
+      .circleWrapper {
+        width: 536px;
+        height: 530px;
+        border-radius: 50%;
+        border: 1px solid var(--color--line);
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 250;
+
+        .item {
+          cursor: pointer;
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background-color: var(--color--text);
+          z-index: 100;
+        }
+
+        .active {
+          cursor: pointer;
+          display: flex;
+          width: 56px;
+          height: 56px;
+          border-radius: 50%;
+          text-align: center;
+          align-items: center;
+          justify-content: center;
+          background-color: var(--color--background);
+          border: 1px solid var(--color--line);
+          z-index: 100;
+        }
+
+        .circleTitle {
+          position: absolute;
+          left: 130%;
+          @include mixins.font-PTSans-property(700, 20);
+        }
+
+        @media(max-width: 576px) {
+          display: none;
         }
       }
     }
+
+    &:after, &:before {
+      content: '';
+      border: 1px solid var(--color--line);
+      top: 50%;
+      left: 50%;
+      position: absolute;
+
+      @media(max-width: 576px) {
+        display: none;
+      }
+    }
+
+    &:before {
+      transform: translate(-50%, -50%) rotate(90deg);
+      width: calc(100vh - 2px);
+    }
+
+    &:after {
+      transform: translate(-50%, -50%);
+      width: 100%;
+    }
   }
+
 }
