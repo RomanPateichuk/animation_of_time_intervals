@@ -51,6 +51,7 @@ ul {
 .swiper-pagination{
   @media(max-width: 576px){
     position: unset !important;
-    margin-top: 10rem
+    margin-top: 10rem;
+    margin-bottom: 2.5rem;
   }
 }
