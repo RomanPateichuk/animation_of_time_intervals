@@ -5,7 +5,6 @@
     "dev": "webpack serve --config webpack.dev.js --open --env mode=local",
     "build-dev": "webpack --config webpack.dev.js --env mode=dev",
     "build-prod": "webpack --config webpack.prod.js --env mode=prod",
-    "build": "webpack --config webpack.prod.js --env mode=prod",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix"
   },
