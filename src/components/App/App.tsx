@@ -21,6 +21,7 @@ export const App = () => {
 
   const isExtraLarge = useMediaQuery('(max-width: 1200px)');
   const isMedium = useMediaQuery('(max-width: 768px)');
+  const isSmall = useMediaQuery('(max-width: 576px)');
 
   const container = useRef<HTMLDivElement | null>(null);
   const rotationIndex = useRef({ index: 6 });
@@ -30,17 +31,19 @@ export const App = () => {
 
   useGSAP(
     () => {
-      updateCirclePositions(activeElement);
+      if (!isSmall) {
+        updateCirclePositions(activeElement);
 
-      gsap.to(rotationIndex.current, {
-        index: activeElement,
-        duration: 0.5,
-        ease: 'power2.inOut',
+        gsap.to(rotationIndex.current, {
+          index: activeElement,
+          duration: 0.5,
+          ease: 'power2.inOut',
 
-        onUpdate: () => {
-          updateCirclePositions(rotationIndex.current.index);
-        },
-      });
+          onUpdate: () => {
+            updateCirclePositions(rotationIndex.current.index);
+          },
+        });
+      }
     },
     { scope: container, dependencies: [activeElement, elements, hoveredElement] },
   );
@@ -76,33 +79,40 @@ export const App = () => {
   const generateCircleItems = () => {
     return (
       <>
-        {elements?.map((item, index) => {
-          return (
-            <div
-              key={item.id}
-              data-gsap-target="circle-item"
-              onMouseEnter={() => {
-                setHoveredElement(index + 1);
-              }}
-              onMouseLeave={() => {
-                setHoveredElement(null);
-              }}
-              onClick={() => {
-                clickItemHandler(index + 1);
-              }}
-              className={classNames({
-                [s.active]: index + 1 === activeElement || index + 1 === hoveredElement,
-                [s.item]: index + 1 !== activeElement && index + 1 !== hoveredElement,
-              })}>
-              {index + 1 === activeElement || index + 1 === hoveredElement
-                ? index + 1
-                : null}
-              {index + 1 === activeElement && (
-                <div className={s.circleTitle}>{item.title}</div>
-              )}
-            </div>
-          );
-        })}
+        {!isSmall &&
+          elements?.map((item, index) => {
+            const hoverHandlers = !isMedium
+              ? {
+                  onMouseEnter: () => {
+                    setHoveredElement(index + 1);
+                  },
+                  onMouseLeave: () => {
+                    setHoveredElement(null);
+                  },
+                }
+              : {};
+
+            return (
+              <div
+                key={item.id}
+                data-gsap-target="circle-item"
+                {...hoverHandlers}
+                onClick={() => {
+                  clickItemHandler(index + 1);
+                }}
+                className={classNames({
+                  [s.active]: index + 1 === activeElement || index + 1 === hoveredElement,
+                  [s.item]: index + 1 !== activeElement && index + 1 !== hoveredElement,
+                })}>
+                {index + 1 === activeElement || index + 1 === hoveredElement
+                  ? index + 1
+                  : null}
+                {index + 1 === activeElement && (
+                  <div className={s.circleTitle}>{item.title}</div>
+                )}
+              </div>
+            );
+          })}
       </>
     );
   };
